@@ -1044,12 +1044,12 @@ Strings
 
 .. function:: nextind(str, i)
 
-   Get the next valid string index after ``i``. Returns ``endof(str)+1`` at
-   the end of the string.
+   Get the next valid string index after ``i``. Returns a value greater than ``endof(str)``
+   at or after the end of the string.
 
 .. function:: prevind(str, i)
 
-   Get the previous valid string index before ``i``. Returns ``0`` at
+   Get the previous valid string index before ``i``. Returns a value less than ``1`` at
    the beginning of the string.
 
 .. function:: randstring(len)
@@ -2013,6 +2013,18 @@ Mathematical Operators
 
    Modulus after division, returning in the range [0,m)
 
+.. function:: modpi(x)
+
+   Modulus after division by pi, returning in the range [0,pi). More accurate than mod(x,pi).
+
+.. function:: mod2pi(x)
+
+   Modulus after division by 2pi, returning in the range [0,2pi). More accurate than mod(x,2pi).
+
+.. function:: modpio2(x)
+
+   Modulus after division by pi/2, returning in the range [0,pi/2). More accurate than mod(x,pi/2).
+
 .. function:: rem(x, m)
 
    Remainder after division
@@ -2183,14 +2195,14 @@ Mathematical Operators
    Boolean not
 
 .. _&&:
-.. function:: &&(x, y)
+.. function:: x && y
 
-   Boolean and
+   Short-circuiting boolean and
 
 .. _||:
-.. function:: ||(x, y)
+.. function:: x || y
 
-   Boolean or
+   Short-circuiting boolean or
 
 .. function:: A_ldiv_Bc(a,b)
 
@@ -2513,7 +2525,7 @@ Mathematical Functions
 
 .. function:: round(x, [digits, [base]])
 
-   ``round(x)`` returns the nearest integral value of the same type as ``x`` to ``x``. ``round(x, digits)`` rounds to the specified number of digits after the decimal place, or before if negative, e.g., ``round(pi,2)`` is ``3.14``. ``round(x, digits, base)`` rounds using a different base, defaulting to 10, e.g., ``round(pi, 3, 2)`` is ``3.125``.
+   ``round(x)`` returns the nearest integral value of the same type as ``x`` to ``x``. ``round(x, digits)`` rounds to the specified number of digits after the decimal place, or before if negative, e.g., ``round(pi,2)`` is ``3.14``. ``round(x, digits, base)`` rounds using a different base, defaulting to 10, e.g., ``round(pi, 1, 8)`` is ``3.125``.
 
 .. function:: ceil(x, [digits, [base]])
 
@@ -3135,22 +3147,26 @@ Numbers
    ``BigFloat(2.1)`` may not yield what you expect. You may prefer to
    initialize constants using strings, e.g., ``BigFloat("2.1")``.
 
-.. function:: get_rounding()
+.. function:: get_rounding(T)
 
-   Get the current floating point rounding mode. Valid modes are ``RoundNearest``, ``RoundToZero``, ``RoundUp`` and ``RoundDown``.
+   Get the current floating point rounding mode for type ``T``. Valid modes
+   are ``RoundNearest``, ``RoundToZero``, ``RoundUp``, ``RoundDown``, and
+   ``RoundFromZero`` (``BigFloat`` only).
 
-.. function:: set_rounding(mode)
+.. function:: set_rounding(T, mode)
 
-   Set the floating point rounding mode. See ``get_rounding`` for available modes
+   Set the rounding mode of floating point type ``T``. Note that this may
+   affect other types, for instance changing the rounding mode of ``Float64``
+   will change the rounding mode of ``Float32``. See ``get_rounding`` for available modes
 
-.. function:: with_rounding(f::Function,mode)
+.. function:: with_rounding(f::Function, T, mode)
 
-   Change the floating point rounding mode for the duration of ``f``. It is logically equivalent to::
+   Change the rounding mode of floating point type ``T`` for the duration of ``f``. It is logically equivalent to::
 
-       old = get_rounding()
-       set_rounding(mode)
+       old = get_rounding(T)
+       set_rounding(T, mode)
        f()
-       set_rounding(old)
+       set_rounding(T, old)
 
    See ``get_rounding`` for available rounding modes.
 
@@ -3239,18 +3255,6 @@ The `BigFloat` type implements arbitrary-precision floating-point aritmetic usin
        set_bigfloat_precision(precision)
        f()
        set_bigfloat_precision(old)
-
-.. function:: get_bigfloat_rounding()
-
-   Get the current BigFloat rounding mode. Valid modes are ``RoundNearest``, ``RoundToZero``, ``RoundUp``, ``RoundDown``, ``RoundFromZero``
-
-.. function:: set_bigfloat_rounding(mode)
-
-   Set the BigFloat rounding mode. See get_bigfloat_rounding for available modes
-
-.. function:: with_bigfloat_rounding(f::Function,mode)
-
-   Change the BigFloat rounding mode for the duration of ``f``. See ``get_bigfloat_rounding`` for available rounding modes; see also ``with_bigfloat_precision``.
 
 Random Numbers
 --------------
@@ -3797,6 +3801,16 @@ Combinatorics
    ``collect(partitions(array))`` to get an array of all partitions.
    The number of partitions to generete can be efficiently
    computed using ``length(partitions(array))``.
+
+.. function:: partitions(array, m)
+
+   Generate all set partitions of the elements of an array into exactly m
+   subsets, represented as arrays of arrays. Because the number of
+   partitions can be very large, this function returns an iterator object.
+   Use ``collect(partitions(array,m))`` to get an array of all partitions.
+   The number of partitions into m subsets is equal to the Stirling number
+   of the second kind and can be efficiently computed using
+   ``length(partitions(array,m))``.
 
 Statistics
 ----------

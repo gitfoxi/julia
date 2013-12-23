@@ -592,6 +592,12 @@
 @test isequal(atan(complex( NaN, NaN)),complex( NaN, NaN))
 
 
+# lexcmp
+@test lexcmp(1.0-1.0im, 1.0+0.0im) == -1
+@test lexcmp(0.0+0.0im, 0.0+0.0im) == 0
+@test lexcmp(1.0-1.0im, 0.0+0.0im) == 1
+
+
 # misc.
 
 @test complex(1//2,1//3)^2 === complex(5//36, 1//3)
@@ -641,3 +647,6 @@ function cdiv_test(a,b)
 end
 @test cdiv_test(complex(1//2, 3//4), complex(17//13, 4//5))
 @test cdiv_test(complex(1,2), complex(8997,2432))
+
+# inv
+@test inv(1e300+0im) == 1e-300 - 0.0im

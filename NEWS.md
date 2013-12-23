@@ -6,6 +6,11 @@ New language features
 
   * Greatly enhanced performance for passing and returning tuples ([#4042]).
 
+  * Tuples (of integers, symbols, or bools) can now be used as type
+    parameters ([#5164]).
+
+  * `import module: name1, name2, ...` ([#5214]).
+
 New library functions
 ---------------------
 
@@ -44,12 +49,18 @@ Library improvements
 
   * `rand` now supports arbitrary `Ranges` arguments ([#5059]).
 
+  * `mod2pi` function ([#4799], [#4862]).
+
 Deprecated or removed
 ---------------------
 
   * `dense` is deprecated in favor of `full` ([#4759])
 
   * The `Stat` type is renamed `StatStruct` ([#4670])
+
+  * `set_rounding`, `get_rounding` and `with_rounding` now take an additional
+    argument specifying the floating point type to which they apply. The old
+    behaviour and `[get/set/with]_bigfloat_rounding` functions are deprecated ([#5007])
 
 [#4775]: https://github.com/JuliaLang/julia/issues/4775
 [#4870]: https://github.com/JuliaLang/julia/issues/4870
@@ -58,7 +69,7 @@ Deprecated or removed
 [#4759]: https://github.com/JuliaLang/julia/issues/4759
 [#4819]: https://github.com/JuliaLang/julia/issues/4819
 [#4670]: https://github.com/JuliaLang/julia/issues/4670
-
+[#5007]: https://github.com/JuliaLang/julia/issues/5007
 
 
 Julia v0.2.0 Release Notes
